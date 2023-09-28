@@ -1,12 +1,21 @@
-from bs4 import BeautifulSoup
 import hashlib
 import requests
+
+from bs4 import BeautifulSoup
+from datetime import datetime, timedelta
+
+ABORT_AFTER = timedelta(seconds=20)
 
 
 def decryptMD5(testHash):
     s = []
 
+    dt1 = datetime.now()
     while True:
+        dt2 = datetime.now()
+        if (dt2 - dt1) > ABORT_AFTER:
+            return ""
+
         m = hashlib.md5()
 
         for c in s:

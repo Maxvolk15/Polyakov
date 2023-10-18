@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 ABORT_AFTER = timedelta(seconds=15)
 
+
 def decryptMD5(testHash):
     s = []
 
@@ -13,7 +14,7 @@ def decryptMD5(testHash):
     while True:
         dt2 = datetime.now()
         if (dt2 - dt1) > ABORT_AFTER:
-            return ''
+            return ""
 
         m = hashlib.md5()
 
@@ -41,20 +42,20 @@ def decryptMD5(testHash):
 # Перед использованием кода надо в терминале написать: pip3 install bs4, pip3 install requests
 
 url = input("Введите ссылку на тест: ")
-print(f"")
 
 page = requests.get(url)
 soup = BeautifulSoup(page.text, "html.parser")
-vl = soup.find_all("div", 'q')
+vl = soup.find_all("div", "q")
 
 
 for q, data in enumerate(vl):
-    dat = data.find_all('input')
+    dat = data.find_all("input")
     for dt in dat:
-        d = dt['value']
-        if len(d) == 1:
-            print(f'Номер{q+1}: {d}')
-        if len(d) > 20:
+        d = dt["value"]
+
+        if len(d) == 1 and d == "1":
+            text = list(dt.parent.parent.children)[-1].text
+            print(f"---------\nНомер {q+1:0>2}: {text}\n---------")
+        elif len(d) > 20:
             res = decryptMD5(d)
-            print(f'Номер{q+1}: {res} ({d})')
-    print('')
+            print(f"---------\nНомер {q+1:0>2}: {res}\n---------")
